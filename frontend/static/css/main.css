@@ -1,0 +1,156 @@
+/* Custom styles for Document Research & Theme Identification Chatbot */
+
+/* Animation for theme cards */
+.theme-card {
+    transition: all 0.3s ease;
+}
+.theme-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation for citation badges */
+.citation-badge {
+    transition: all 0.2s ease;
+}
+.citation-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Animation for document cards */
+.document-card {
+    transition: all 0.3s ease;
+}
+.document-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Active tab styling */
+.tab-active {
+    border-bottom: 3px solid #4F46E5;
+    color: #4F46E5;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .theme-visualization {
+        height: 200px;
+    }
+}
+
+/* Theme visualization container */
+.theme-visualization {
+    min-height: 300px;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Citation network styling */
+.citation-network {
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+}
+
+/* Document selection highlight */
+.document-selected {
+    border-left: 4px solid #4F46E5;
+}
+
+/* Query result highlight */
+.query-highlight {
+    background-color: rgba(79, 70, 229, 0.1);
+    padding: 2px;
+    border-radius: 2px;
+}
+
+/* Theme color variations */
+.theme-climate {
+    background: linear-gradient(to right, #e0f2fe, #dbeafe);
+    border-color: #93c5fd;
+}
+
+.theme-energy {
+    background: linear-gradient(to right, #dcfce7, #d1fae5);
+    border-color: #6ee7b7;
+}
+
+.theme-policy {
+    background: linear-gradient(to right, #fef3c7, #fef9c3);
+    border-color: #fcd34d;
+}
+
+.theme-agriculture {
+    background: linear-gradient(to right, #f3e8ff, #ede9fe);
+    border-color: #c4b5fd;
+}
+
+/* Loading animation */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(79, 70, 229, 0.1);
+    border-radius: 50%;
+    border-top-color: #4F46E5;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tooltip styling */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4F46E5;
+}

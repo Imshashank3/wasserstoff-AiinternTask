@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Research & Theme Identification Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-robot text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">Document Research & Theme Identification</h1>
+                        <p class="text-indigo-200">Analyze documents, identify themes, get cited answers</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-4">
+                    <button id="btn-documents" class="px-4 py-2 rounded hover:bg-indigo-700 transition">Documents</button>
+                    <button id="btn-query" class="px-4 py-2 rounded hover:bg-indigo-700 transition">Query</button>
+                    <button id="btn-themes" class="px-4 py-2 rounded hover:bg-indigo-700 transition">Themes</button>
+                    <button id="btn-settings" class="px-4 py-2 rounded hover:bg-indigo-700 transition">Settings</button>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-2">
+                <button class="block w-full text-left px-4 py-2 hover:bg-indigo-700 transition">Documents</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-indigo-700 transition">Query</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-indigo-700 transition">Themes</button>
+                <button class="block w-full text-left px-4 py-2 hover:bg-indigo-700 transition">Settings</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Dashboard Overview -->
+        <div id="dashboard-view" class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Total Documents</p>
+                            <h3 class="text-3xl font-bold">78</h3>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-file-alt text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-green-600 mt-4"><i class="fas fa-arrow-up"></i> 12% from last week</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Identified Themes</p>
+                            <h3 class="text-3xl font-bold">24</h3>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-lightbulb text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-green-600 mt-4"><i class="fas fa-arrow-up"></i> 8% from last week</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Queries Processed</p>
+                            <h3 class="text-3xl font-bold">156</h3>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-search text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-green-600 mt-4"><i class="fas fa-arrow-up"></i> 23% from last week</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Citations Created</p>
+                            <h3 class="text-3xl font-bold">892</h3>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-quote-right text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-green-600 mt-4"><i class="fas fa-arrow-up"></i> 18% from last week</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mb-8 border-b border-gray-200">
+            <div class="flex overflow-x-auto">
+                <button id="tab-documents" class="tab-active px-6 py-3 font-medium text-gray-800">Documents</button>
+                <button id="tab-query" class="px-6 py-3 font-medium text-gray-500">Query</button>
+                <button id="tab-themes" class="px-6 py-3 font-medium text-gray-500">Themes</button>
+                <button id="tab-settings" class="px-6 py-3 font-medium text-gray-500">Settings</button>
+            </div>
+        </div>
+
+        <!-- Documents View -->
+        <div id="documents-view" class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Document Library</h2>
+                <div class="flex space-x-2">
+                    <div class="relative">
+                        <input type="text" placeholder="Search documents..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                        <i class="fas fa-upload mr-2"></i> Upload
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Document Type</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>All Types</option>
+                            <option>PDF</option>
+                            <option>Word</option>
+                            <option>Image</option>
+                            <option>Text</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date Range</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>All Time</option>
+                            <option>Last 7 Days</option>
+                            <option>Last 30 Days</option>
+                            <option>Last 90 Days</option>
+                            <option>Custom Range</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>All Authors</option>
+                            <option>John Smith</option>
+                            <option>Maria Garcia</option>
+                            <option>David Chen</option>
+                            <option>Sarah Johnson</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+                        <div class="border rounded-md px-3 py-2 flex items-center">
+                            <input type="text" placeholder="Add tags..." class="focus:outline-none flex-grow">
+                            <i class="fas fa-plus-circle text-indigo-600 cursor-pointer"></i>
+                        </div>
+                    </div>
+                    <div class="ml-auto self-end">
+                        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition">
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Document Card 1 -->
+                <div class="document-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full mb-2">PDF</span>
+                                <h3 class="font-bold text-lg text-gray-800">Climate Change Policy Review</h3>
+                                <p class="text-gray-500 text-sm">Uploaded on May 10, 2025</p>
+                            </div>
+                            <div class="dropdown relative">
+                                <button class="text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-user mr-2"></i>
+                            <span>Author: Environmental Protection Agency</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            <span>42 pages</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">climate</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">policy</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">government</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-search mr-1"></i> Query
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Card 2 -->
+                <div class="document-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block px-2 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full mb-2">Word</span>
+                                <h3 class="font-bold text-lg text-gray-800">Renewable Energy Market Analysis</h3>
+                                <p class="text-gray-500 text-sm">Uploaded on May 12, 2025</p>
+                            </div>
+                            <div class="dropdown relative">
+                                <button class="text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-user mr-2"></i>
+                            <span>Author: International Energy Agency</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            <span>78 pages</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">energy</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">renewable</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">market</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-search mr-1"></i> Query
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Card 3 -->
+                <div class="document-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="inline-block px-2 py-1 text-xs font-semibold bg-purple-100 text-purple-800 rounded-full mb-2">Image</span>
+                                <h3 class="font-bold text-lg text-gray-800">Sustainable Agriculture Report</h3>
+                                <p class="text-gray-500 text-sm">Uploaded on May 14, 2025</p>
+                            </div>
+                            <div class="dropdown relative">
+                                <button class="text-gray-500 hover:text-gray-700">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-user mr-2"></i>
+                            <span>Author: Food and Agriculture Organization</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 mb-3">
+                            <i class="fas fa-file-alt mr-2"></i>
+                            <span>36 pages</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">agriculture</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">sustainable</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">farming</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-search mr-1"></i> Query
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- More document cards would go here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-8 flex justify-center">
+                <nav class="flex items-center space-x-2">
+                    <button class="px-3 py-1 rounded border text-gray-600 hover:bg-gray-100">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="px-3 py-1 rounded border bg-indigo-600 text-white">1</button>
+                    <button class="px-3 py-1 rounded border text-gray-600 hover:bg-gray-100">2</button>
+                    <button class="px-3 py-1 rounded border text-gray-600 hover:bg-gray-100">3</button>
+                    <span class="px-3 py-1">...</span>
+                    <button class="px-3 py-1 rounded border text-gray-600 hover:bg-gray-100">8</button>
+                    <button class="px-3 py-1 rounded border text-gray-600 hover:bg-gray-100">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Query View (Hidden by default) -->
+        <div id="query-view" class="mb-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Query Documents</h2>
+                <div class="flex space-x-2">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                        <i class="fas fa-save mr-2"></i> Save Query
+                    </button>
+                </div>
+            </div>
+
+            <!-- Query Input -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Enter your query</label>
+                    <textarea rows="3" class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="What are the main factors contributing to climate change according to recent research?"></textarea>
+                </div>
+                <div class="flex flex-wrap gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Document Selection</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>All Documents</option>
+                            <option>Climate Change Documents</option>
+                            <option>Energy Policy Documents</option>
+                            <option>Custom Selection...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Max Results</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Citation Level</label>
+                        <select class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option>Document</option>
+                            <option>Page</option>
+                            <option>Paragraph</option>
+                            <option>Sentence</option>
+                        </select>
+                    </div>
+                    <div class="ml-auto self-end">
+                        <button class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="identify-themes" class="mr-2">
+                    <label for="identify-themes" class="text-sm text-gray-700">Identify themes across documents</label>
+                </div>
+            </div>
+
+            <!-- Query Results -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+                <div class="p-4 bg-gray-50 border-b">
+                    <h3 class="font-bold text-lg text-gray-800">Query Results</h3>
+                    <p class="text-gray-500 text-sm">3 documents found with relevant information</p>
+                </div>
+                <div class="p-6">
+                    <!-- Result 1 -->
+                    <div class="mb-6 pb-6 border-b">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-lg text-gray-800">Climate Change Policy Review</h4>
+                            <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">PDF</span>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                            <p class="text-gray-700">The main factors contributing to climate change include greenhouse gas emissions from fossil fuel combustion, deforestation, industrial processes, and agricultural practices. Carbon dioxide (CO2) from burning fossil fuels is the largest contributor, accounting for approximately 75% of global greenhouse gas emissions.</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="citation-badge bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full flex items-center">
+                                <i class="fas fa-quote-right mr-1"></i> Page 12, Paragraph 3
+                            </span>
+                            <div class="ml-auto flex space-x-2">
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-external-link-alt mr-1"></i> View Source
+                                </button>
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-chart-network mr-1"></i> View in Context
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Result 2 -->
+                    <div class="mb-6 pb-6 border-b">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-lg text-gray-800">Renewable Energy Market Analysis</h4>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Word</span>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                            <p class="text-gray-700">Recent research indicates that energy production accounts for approximately 73% of global greenhouse gas emissions. The burning of coal, natural gas, and oil for electricity and heat is the largest single source of global greenhouse gas emissions. Transportation, industry, and agriculture are also significant contributors.</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="citation-badge bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full flex items-center">
+                                <i class="fas fa-quote-right mr-1"></i> Page 24, Paragraph 2
+                            </span>
+                            <div class="ml-auto flex space-x-2">
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-external-link-alt mr-1"></i> View Source
+                                </button>
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-chart-network mr-1"></i> View in Context
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Result 3 -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h4 class="font-semibold text-lg text-gray-800">Sustainable Agriculture Report</h4>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Image</span>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                            <p class="text-gray-700">Agricultural activities contribute significantly to climate change through methane emissions from livestock, rice cultivation, and manure management, as well as nitrous oxide emissions from fertilized soils. Land use changes, particularly deforestation for agricultural expansion, also release large amounts of carbon stored in trees and soil.</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="citation-badge bg-indigo-100 text-indigo-800 text-xs px-3 py-1 rounded-full flex items-center">
+                                <i class="fas fa-quote-right mr-1"></i> Page 8, Paragraph 4
+                            </span>
+                            <div class="ml-auto flex space-x-2">
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-external-link-alt mr-1"></i> View Source
+                                </button>
+                                <button class="text-gray-600 hover:text-gray-800 text-sm">
+                                    <i class="fas fa-chart-network mr-1"></i> View in Context
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Identification -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4 bg-gray-50 border-b">
+                    <h3 class="font-bold text-lg text-gray-800">Identified Themes</h3>
+                    <p class="text-gray-500 text-sm">2 common themes identified across documents</p>
+                </div>
+                <div class="p-6">
+                    <!-- Theme 1 -->
+                    <div class="theme-card bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-5 mb-6 border border-indigo-100">
+                        <h4 class="font-semibold text-lg text-indigo-800 mb-2">Theme 1: Greenhouse Gas Emissions Sources</h4>
+                        <p class="text-gray-700 mb-4">This theme focuses on the primary sources of greenhouse gas emissions, including fossil fuel combustion, industrial processes, and agricultural activities.</p>
+                        <div class="bg-white p-3 rounded-lg mb-3 shadow-sm">
+                            <p class="text-gray-600 text-sm italic">Documents highlight that energy production (73%), transportation, and agriculture are the main contributors to greenhouse gas emissions, with CO2 from fossil fuels accounting for approximately 75% of global emissions.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="citation-badge bg-white text-indigo-800 text-xs px-3 py-1 rounded-full border border-indigo-200 flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i> Climate Change Policy Review: Page 12
+                            </span>
+                            <span class="citation-badge bg-white text-indigo-800 text-xs px-3 py-1 rounded-full border border-indigo-200 flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i> Renewable Energy Market Analysis: Page 24
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Theme 2 -->
+                    <div class="theme-card bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-5 border border-purple-100">
+                        <h4 class="font-semibold text-lg text-purple-800 mb-2">Theme 2: Agricultural Impact on Climate</h4>
+                        <p class="text-gray-700 mb-4">This theme explores how agricultural practices contribute to climate change through various mechanisms including livestock emissions and land use changes.</p>
+                        <div class="bg-white p-3 rounded-lg mb-3 shadow-sm">
+                            <p class="text-gray-600 text-sm italic">Documents emphasize that agricultural activities contribute to climate change through methane emissions from livestock and rice cultivation, nitrous oxide from fertilized soils, and carbon release from deforestation for agricultural expansion.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="citation-badge bg-white text-purple-800 text-xs px-3 py-1 rounded-full border border-purple-200 flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i> Sustainable Agriculture Report: Page 8
+                            </span>
+                            <span class="citation-badge bg-white text-purple-800 text-xs px-3 py-1 rounded-full border border-purple-200 flex items-center">
+                                <i class="fas fa-file-alt mr-1"></i> Climate Change Policy Review: Page 15
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Themes View (Hidden by default) -->
+        <div id="themes-view" class="mb-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Theme Explorer</h2>
+                <div class="flex space-x-2">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                        <i class="fas fa-plus mr-2"></i> New Analysis
+                    </button>
+                </div>
+            </div>
+
+            <!-- Theme Visualization -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-lg text-gray-800">Theme Visualization</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm border rounded-lg text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-download mr-1"></i> Export
+                        </button>
+                        <button class="px-3 py-1 text-sm border rounded-lg text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-expand mr-1"></i> Fullscreen
+                        </button>
+                    </div>
+                </div>
+                <div class="border rounded-lg p-4 h-80 bg-gray-50 flex items-center justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-project-diagram text-5xl text-indigo-300 mb-4"></i>
+                        <p class="text-gray-500">Interactive theme visualization would appear here</p>
+                        <p class="text-gray-400 text-sm">Showing connections between documents and identified themes</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme List -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Theme Card 1 -->
+                <div class="theme-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg text-indigo-800">Greenhouse Gas Emissions Sources</h3>
+                                <p class="text-gray-600 text-sm">8 documents, 24 citations</p>
+                            </div>
+                            <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">Major Theme</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700 mb-4">This theme focuses on the primary sources of greenhouse gas emissions, including fossil fuel combustion, industrial processes, and agricultural activities.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">emissions</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">fossil fuels</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">energy</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> Explore
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Card 2 -->
+                <div class="theme-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b bg-gradient-to-r from-purple-50 to-pink-50">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg text-purple-800">Agricultural Impact on Climate</h3>
+                                <p class="text-gray-600 text-sm">6 documents, 18 citations</p>
+                            </div>
+                            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Major Theme</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700 mb-4">This theme explores how agricultural practices contribute to climate change through various mechanisms including livestock emissions and land use changes.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">agriculture</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">methane</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">deforestation</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> Explore
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Card 3 -->
+                <div class="theme-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b bg-gradient-to-r from-green-50 to-teal-50">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg text-green-800">Renewable Energy Solutions</h3>
+                                <p class="text-gray-600 text-sm">5 documents, 15 citations</p>
+                            </div>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Minor Theme</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700 mb-4">This theme covers various renewable energy technologies and their potential to reduce greenhouse gas emissions and mitigate climate change.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">solar</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">wind</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">renewable</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> Explore
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Card 4 -->
+                <div class="theme-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 border-b bg-gradient-to-r from-yellow-50 to-amber-50">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg text-yellow-800">Policy Frameworks and Regulations</h3>
+                                <p class="text-gray-600 text-sm">7 documents, 21 citations</p>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Major Theme</span>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700 mb-4">This theme examines policy frameworks, regulations, and international agreements aimed at addressing climate change and reducing emissions.</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">policy</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">regulation</span>
+                            <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">agreements</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-eye mr-1"></i> Explore
+                            </button>
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                <i class="fas fa-file-export mr-1"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme Analysis -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4 bg-gray-50 border-b">
+                    <h3 class="font-bold text-lg text-gray-800">Theme Analysis</h3>
+                    <p class="text-gray-500 text-sm">Cross-document synthesis and insights</p>
+                </div>
+                <div class="p-6">
+                    <p class="text-gray-700 mb-4">The analysis of 78 documents reveals several interconnected themes related to climate change, its causes, impacts, and potential solutions. The most prominent themes include:</p>
+                    
+                    <ol class="list-decimal pl-5 mb-4 space-y-2">
+                        <li class="text-gray-700"><strong>Greenhouse Gas Emissions Sources</strong> - Consistently identified as the primary driver of climate change, with fossil fuel combustion being the largest contributor.</li>
+                        <li class="text-gray-700"><strong>Agricultural Impact on Climate</strong> - Highlighted as a significant but often overlooked contributor through methane emissions and land use changes.</li>
+                        <li class="text-gray-700"><strong>Renewable Energy Solutions</strong> - Presented as the most promising pathway to emissions reduction, with solar and wind technologies showing the greatest potential.</li>
+                        <li class="text-gray-700"><strong>Policy Frameworks and Regulations</strong> - Identified as essential mechanisms for driving systemic change, with international cooperation being crucial.</li>
+                    </ol>
+                    
+                    <p class="text-gray-700 mb-4">The documents show strong consensus on the anthropogenic nature of climate change, with 94% explicitly attributing rising global temperatures to human activities. There is also significant agreement (87% of documents) on the need for immediate and substantial emissions reductions to limit warming to 1.5°C above pre-industrial levels.</p>
+                    
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <p class="text-indigo-800 font-medium">Key Insight:</p>
+                        <p class="text-gray-700">The analysis reveals that while technological solutions exist, the primary barriers to addressing climate change are political and economic rather than technical. This suggests that research and advocacy should focus on policy implementation and economic incentives alongside technological development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings View (Hidden by default) -->
+        <div id="settings-view" class="mb-8 hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+                <div class="flex space-x-2">
+                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+                        <i class="fas fa-save mr-2"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Tabs -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="border-b">
+                    <div class="flex">
+                        <button class="px-6 py-3 font-medium text-indigo-600 border-b-2 border-indigo-600">General</button>
+                        <button class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700">API Configuration</button>
+                        <button class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700">OCR Settings</button>
+                        <button class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700">Theme Detection</button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <!-- General Settings -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Default Citation Level</label>
+                            <select class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option>Document</option>
+                                <option selected>Page</option>
+                                <option>Paragraph</option>
+                                <option>Sentence</option>
+                            </select>
+                            <p class="mt-1 text-sm text-gray-500">Select the default granularity level for citations</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Theme Detection Threshold</label>
+                            <input type="range" min="0" max="100" value="75" class="w-full">
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>Low Similarity (More Themes)</span>
+                                <span>75%</span>
+                                <span>High Similarity (Fewer Themes)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Results Per Query</label>
+                            <input type="number" value="10" class="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <p class="mt-1 text-sm text-gray-500">Maximum number of results to return for each query</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Interface Theme</label>
+                            <div class="flex space-x-4">
+                                <div class="flex items-center">
+                                    <input type="radio" id="theme-light" name="theme" checked class="mr-2">
+                                    <label for="theme-light">Light</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="theme-dark" name="theme" class="mr-2">
+                                    <label for="theme-dark">Dark</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="theme-system" name="theme" class="mr-2">
+                                    <label for="theme-system">System</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="auto-save" checked class="mr-2">
+                            <label for="auto-save" class="text-sm text-gray-700">Automatically save queries and results</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold mb-2">Document Research & Theme Identification</h3>
+                    <p class="text-gray-400">Analyze documents, identify themes, get cited answers</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-book"></i> Documentation
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-code"></i> API
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">© 2025 Document Research & Theme Identification Chatbot</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="static/js/main.js"></script>
+</body>
+</html>
